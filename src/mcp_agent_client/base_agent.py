@@ -51,6 +51,7 @@ class BaseAgent(Configurable):
         repetition_penalty: float = 0.0
         api_key: str = ""
         api_base_url: str = ""
+        embeddings_name: str = "openai"
 
         agent_type: str = "zeroshot_agent"
         prompt_path: str = ""
