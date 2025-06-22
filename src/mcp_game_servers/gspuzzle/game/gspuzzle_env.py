@@ -102,7 +102,6 @@ class GspuzzleEnv(BaseEnv):
     @dataclass
     class Config:
         state_path: str
-        result_path: str
         log_path: str
         final_level: str
         sleep_time: float
