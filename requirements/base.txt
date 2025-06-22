@@ -24,6 +24,8 @@ pyobjc-framework-Quartz; sys_platform == "darwin"
 pyobjc-framework-Cocoa; sys_platform == "darwin"
 git+https://github.com/facebookresearch/segment-anything.git
 pywin32; sys_platform == "win32"
+screeninfo
+dxcam
 dataclass_wizard
 dill
 anthropic

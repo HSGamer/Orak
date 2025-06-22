@@ -1,0 +1,15 @@
+# logging: true
+env_name: Gspuzzle
+log_path: "logs"
+env:
+  state_path: "C:/Users/HSGamer/Downloads/GSPuzzle-Build/PlayerLog.txt"
+  result_path: "C:/Users/HSGamer/Downloads/GSPuzzle-Build/PlayData"
+  task: Complete the 2 puzzles
+  final_level: Level_2
+  sleep_time: 3
+  input_modality: "text_image"  # "text", "text_image"
+  window_capture_mode: "bitblt"  # "bitblt", "mss", "dxcam"
+  image_max_bytes: 5242880
+  io_env:
+    env_name: "Gspuzzle"
+    win_name_pattern: "^GSPuzzle$"
