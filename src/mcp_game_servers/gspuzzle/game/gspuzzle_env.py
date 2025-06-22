@@ -20,6 +20,7 @@ if _isWin():
 elif _isMac():
     from mcp_game_servers.gameio.window_capture_mac import capture
 
+
 # --- State Parser for GSPuzzle ---
 
 class GspuzzleStateParser:
@@ -65,13 +66,14 @@ class GspuzzleStateParser:
                 return None
             time.sleep(self.sleep_time)
 
+
 # --- Observation and Action ---
 
 @dataclass
 class GspuzzleObs(Obs):
     state: dict
     image: Image.Image = None
-    score: int = 0
+    score: int = 100
     done: bool = False
 
     def to_text(self) -> str:
@@ -85,6 +87,7 @@ class GspuzzleObs(Obs):
         ]
         return "\n".join(lines)
 
+
 @dataclass
 class GspuzzleAction(Action):
     type: str  # left, right, up, down, next, reset
@@ -95,6 +98,7 @@ class GspuzzleAction(Action):
         if action in ["left", "right", "up", "down", "next", "reset"]:
             return cls(type=action)
         return cls(type="")
+
 
 # --- Environment ---
 
@@ -195,9 +199,16 @@ class GspuzzleEnv(BaseEnv):
         # Wait for state update
         state = self.state_parser.get_state()
 
+        # Give a score based on action and game status
+        if action.type == "reset" and self.last_obs.state.get("game_status") == "Lost":
+            score = self.last_obs.score - 10
+        elif action.type == "next" and self.last_obs.state.get("game_status") == "Won":
+            score = 100
+        else:
+            score = self.last_obs.score - 1
+
         # Check for done
         done = (state.get("level") == self.final_level and state.get("game_status") == "Won")
-        score = 100 - len(state.get("player_moves"))
         image = self.capture_image()
         obs = GspuzzleObs(state=state, image=image, score=score, done=done)
         self.last_obs = obs
