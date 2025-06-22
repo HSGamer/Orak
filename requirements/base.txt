@@ -35,6 +35,7 @@ transformers
 tenacity
 termcolor
 langchain-openai
+langchain-google-genai
 langchain-chroma
 dacite
 pygame 

@@ -6,6 +6,7 @@ from typing import Dict, Optional, Union, Any
 
 from omegaconf import DictConfig
 
+from mcp_agent_client.embeddings.embedding import load_embedding_model
 from mcp_agent_client.llms.llm import load_model, LocalBase
 from mcp_agent_client.llms.openai_utils import (
     Logger,
@@ -204,6 +205,8 @@ class BaselineAgent(BaseAgent):
         api_key: str = ""
         api_base_url: str = ""
 
+        embeddings_name: str = "openai"
+
         agent_type: str = "zeroshot_agent"
         prompt_path: str = ""
 
@@ -218,8 +221,9 @@ class BaselineAgent(BaseAgent):
         self.prompt_path = self.cfg.prompt_path
         self.long_term_memory_len = self.cfg.long_term_memory_len
 
-        self.memory = GenericMemory(path=self.cfg.log_path)
-        self.skill_manager = SkillManager(path=self.cfg.log_path)
+        self.embeddings_model = load_embedding_model(model_name=self.cfg.embeddings_name)
+        self.memory = GenericMemory(path=self.cfg.log_path, embeddings=self.embeddings_model)
+        self.skill_manager = SkillManager(path=self.cfg.log_path, embeddings=self.embeddings_model)
         
         self.modality = self.cfg.prompt_path.split('.')[-1]
         self.agent_type = self.cfg.agent_type

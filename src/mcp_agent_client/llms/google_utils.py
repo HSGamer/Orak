@@ -6,29 +6,45 @@ import base64
 from google.oauth2 import service_account
 from google import genai
 from google.genai import types
+from google.auth.credentials import Credentials
 
 logger = logging.getLogger(__name__)
 
-def setup_gemini(
+def setup_gemini(key_path: str = "src/mcp_agent_servers/keys/google-key/key.env") -> str:
+    with open(key_path, "r") as f:
+        api_key = f.read().strip()
+    os.environ["GOOGLE_API_KEY"] = api_key
+    return api_key
+
+def setup_vertexai(service_account_path: str = "src/mcp_agent_servers/keys/google-key/gemini_gcp.json") -> Credentials:
+    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+    credentials = service_account.Credentials.from_service_account_file(
+        service_account_path, scopes=scopes
+    )
+    return credentials
+
+def setup_gemini_client(
+    api_key_path: str = "src/mcp_agent_servers/keys/google-key/key.env",
     service_account_path: str = "src/mcp_agent_servers/keys/google-key/gemini_gcp.json",
     project_id: str = "gamebench-456108",
     # project_id: str = "gamingslm",
     location: str = "us-central1",
 ) -> genai.Client:
-    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-    credentials = service_account.Credentials.from_service_account_file(
-        service_account_path, scopes=scopes
-    )
-    client = genai.Client(
-        vertexai=True,
-        project=project_id,
-        location=location,
-        credentials=credentials,
-    )
-    return client
+    if os.path.exists(service_account_path):
+        credentials = setup_vertexai(service_account_path)
+        return genai.Client(
+            vertexai=True,
+            project=project_id,
+            location=location,
+            credentials=credentials,
+        )
+    elif os.path.exists(api_key_path):
+        api_key = setup_gemini(api_key_path)
+        return genai.Client(api_key=api_key)
+    raise ValueError("Either service account or API key file must exist.")
 
 try:
-    client = setup_gemini()
+    client = setup_gemini_client()
 except Exception as e:
     print(f"Exception occurred while setting up Gemini client: {e}")
     client = None

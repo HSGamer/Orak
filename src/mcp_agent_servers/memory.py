@@ -1,18 +1,15 @@
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from datetime import datetime
 import json
 import uuid
 import logging
-from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
-from mcp_agent_servers.setup_openai import setup_openai
+from langchain_core.embeddings import Embeddings
 
 logger = logging.getLogger(__name__)
 
-setup_openai()
-
 class GenericMemory:
-    def __init__(self, path: str):
+    def __init__(self, path: str, embeddings: Embeddings):
         self.memories: Dict[str, List[Any]] = {}
         self.histories = []
 
@@ -20,7 +17,7 @@ class GenericMemory:
         self.save_path = f"data/long_term_memory/{path.replace('logs/', '', 1)}/"
         self.vectordb = Chroma(
             collection_name="long_term_memory",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=embeddings,
             persist_directory=self.save_path,
         )
         self.retrieval_top_k = 3

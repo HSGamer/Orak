@@ -1,18 +1,15 @@
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import json
-from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
-from mcp_agent_servers.setup_openai import setup_openai
-
-setup_openai()
+from langchain_core.embeddings import Embeddings
 
 class SkillManager:
-    def __init__(self, path):
+    def __init__(self, path, embeddings: Embeddings):
         self.save_path = f"data/skills/{path.replace('logs/', '', 1)}/"
         self.skills: Dict[str, List[Any]] = {}
         self.vectordb = Chroma(
             collection_name="skill_vectordb",
-            embedding_function=OpenAIEmbeddings(),
+            embedding_function=embeddings,
             persist_directory=self.save_path,
         )
         self.retrieval_top_k = 5

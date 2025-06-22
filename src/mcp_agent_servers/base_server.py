@@ -12,6 +12,8 @@ from typing import Dict, Optional
 from dataclasses import field
 
 from mcp.server.fastmcp import FastMCP
+
+from mcp_agent_client.embeddings.embedding import load_embedding_model
 from mcp_agent_servers.agent_types import AGENT_MODULES
 
 from mcp_agent_servers.memory import GenericMemory
@@ -274,8 +276,11 @@ class MCPAgentServer:
         self.agent_type = self.cfg.agent.agent_type
         self.prompt_path = self.cfg.agent.prompt_path
         self.agent_modules = AGENT_MODULES[self.agent_type]
-        self.memory = GenericMemory(path=self.cfg.agent.log_path)
-        self.skill_manager = SkillManager(path=self.cfg.agent.log_path)
+        self.embeddings_model = load_embedding_model(
+            model_name=self.cfg.agent.embeddings_name if hasattr(self.cfg.agent, "embeddings_name") else "openai"
+        )
+        self.memory = GenericMemory(path=self.cfg.agent.log_path, embeddings=self.embeddings_model)
+        self.skill_manager = SkillManager(path=self.cfg.agent.log_path, embeddings=self.embeddings_model)
         self.long_term_memory_len = self.cfg.agent.long_term_memory_len if hasattr(self.cfg.agent, "long_term_memory_len") else None
 
         # set temp var

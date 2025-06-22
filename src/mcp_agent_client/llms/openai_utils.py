@@ -15,8 +15,6 @@ from tenacity import (
 )
 from termcolor import colored
 
-from mcp_agent_servers.setup_openai import setup_openai
-
 from .utils import (
     CompletionFunc,
     CompletionFuncCall,
@@ -29,6 +27,22 @@ from .utils import (
 #   created=1712197534, model='gpt-4-0125-preview', object='chat.completion', system_fingerprint='fp_b77cb481ed',
 #   usage=CompletionUsage(completion_tokens=9, prompt_tokens=16, total_tokens=25))
 
+def setup_openai(
+    key_path: str = "src/mcp_agent_servers/keys/openai-key/key.env",
+) -> Dict[str, str]:
+    with open(key_path, "r") as f:
+        key_list = f.readlines()
+
+    if len(key_list) > 1:
+        api_key = key_list[0].strip()
+        organization_key = key_list[1].strip()
+        os.environ["OPENAI_ORGANIZATION"] = organization_key
+        os.environ["OPENAI_API_KEY"] = api_key
+        return {"organization": organization_key, "api_key": api_key}
+    else:
+        api_key = key_list[0].strip()
+        os.environ["OPENAI_API_KEY"] = api_key
+        return {"api_key": api_key}
 
 try:
     client = OpenAI(**setup_openai())
