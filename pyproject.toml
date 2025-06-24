@@ -18,11 +18,82 @@ authors = [
     { name = "Jaewoo Ahn", email = "jaewoo.ahn@krafton.com" },
 ]
 dependencies = [
+    "ahk>=1.8.4",
+    "ahk-binary>=2025.1.0",
+    "aiohttp>=3.12.13",
+    "anthropic>=0.55.0",
+    "backoff>=2.2.1",
+    "chardet>=5.2.0",
+    "colorama>=0.4.6",
+    "dacite>=1.9.2",
+    "dataclass-wizard>=0.35.0",
+    "dill>=0.4.0",
+    "dxcam>=0.0.5",
+    "easyocr>=1.7.2",
+    "google-genai>=1.21.1",
+    "gymnasium==1.1.1",
+    "imageio[ffmpeg]>=2.37.0",
+    "langchain-chroma>=0.2.4",
+    "langchain-google-genai>=2.1.5",
+    "langchain-openai>=0.3.25",
+    "matplotlib>=3.10.3",
     "mcp[cli]==1.6.0",
+    "mss>=10.0.0",
+    "multi-template-matching==1.6.6",
+    "numpy>=2.2.6",
+    "omegaconf>=2.3.0",
+    "openai>=1.91.0",
+    "opencv-contrib-python>=4.11.0.86",
+    "opencv-python>=4.11.0.86",
+    "pillow>=10.3.0",
+    "pyautogui>=0.9.54",
+    "pydirectinput>=1.0.4 ; sys_platform == 'win32'",
+    "pygame>=2.6.1",
+    "pyobjc-framework-cocoa>=11.1 ; sys_platform == 'darwin'",
+    "pyobjc-framework-quartz>=11.1 ; sys_platform == 'darwin'",
+    "python-dotenv>=1.1.0",
+    "pywin32>=310 ; sys_platform == 'win32'",
+    "screeninfo>=0.8.1",
+    "segment-anything",
+    "spacy>=3.8.7",
+    "supervision>=0.25.1",
+    "tenacity>=8.5.0",
+    "termcolor>=3.1.0",
+    "tiktoken>=0.9.0",
+    "transformers>=4.52.4",
 ]
 
 [project.urls]
 Repository = "https://github.com/krafton-ai/Orak.git"
+
+[project.optional-dependencies]
+minecraft = [
+    "javascript>=1!1.2.2",
+    "minecraft-launcher-lib>=7.1",
+    "psutil>=7.0.0",
+]
+pokemon-red = [
+    "pyboy==2.5.2",
+]
+starcraft2 = [
+    "burnysc2>=7.0.5",
+    "dxcam>=0.0.5",
+    "nest-asyncio>=1.6.0",
+]
+streetfighter3 = [
+    "diambra>=0.0.20",
+    "diambra-arena>=2.2.7",
+    "ultralytics>=8.3.158",
+]
+supermario = [
+    "google-auth>=2.40.3",
+    "google-auth-oauthlib>=1.2.2",
+    "gym==0.26.2",
+    "gym-super-mario-bros>=7.4.0",
+    "nes-py==8.2.1",
+    "scikit-image>=0.25.2",
+    "torch>=2.7.1",
+]
 
 [tool.black]
 target-version = ["py310"]
@@ -59,6 +130,9 @@ warn_unused_ignores = false
 
 [tool.uv.workspace]
 members = ["KRAFTON AI"]
+
+[tool.uv.sources]
+segment-anything = { git = "https://github.com/facebookresearch/segment-anything.git" }
 
 [build-system]
 requires = ["setuptools", "wheel"]
