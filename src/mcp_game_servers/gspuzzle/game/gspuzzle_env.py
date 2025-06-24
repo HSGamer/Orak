@@ -174,7 +174,6 @@ class GspuzzleEnv(BaseEnv):
         return obs.to_text()
 
     def text2action(self, text: str) -> GspuzzleAction:
-        self.logger.info(f"Converting text to action: {text}")
         return GspuzzleAction.from_string(text)
 
     def step(self, action: GspuzzleAction) -> tuple[GspuzzleObs, float, bool, bool, dict[str, Any]]:
