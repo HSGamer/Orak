@@ -1,5 +1,8 @@
 import os
 import re
+from logging import Logger
+from typing import Optional
+
 import mss
 import ctypes
 import platform
@@ -7,6 +10,8 @@ import platform
 from PIL import Image
 from datetime import datetime
 from screeninfo import get_monitors
+
+import pyautogui
 
 IS_WINDOWS = platform.system() == "Windows"
 
@@ -118,11 +123,20 @@ class WindowCapture:
 
         return img
 
+    def capture_autogui(self):
+        left, top, right, bottom = win32gui.GetWindowRect(self.hwnd)
+        width = right - left
+        height = bottom - top
+        screenshot = pyautogui.screenshot(region=(left, top, width, height))
+        return screenshot
+
     def capture(self, log_path=None) -> Image.Image:
         if self.mode == "mss":
             image = self.capture_mss()
         elif self.mode == "dxcam":
             image = self.capture_dxcam()
+        elif self.mode == "autogui":
+            image = self.capture_autogui()
         else:
             image = self.capture_bitblt()
         
