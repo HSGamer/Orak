@@ -81,7 +81,7 @@ class GspuzzleObs(Obs):
         lines = [
             f"Game Status: {s.get('game_status', '')}",
             f"Level: {s.get('level', '')}",
-            f"Player Moves: {s.get('player_moves', '')}",
+            f"Player Valid Moves: {s.get('player_moves', '')}",
             f"Shadow Moves: {s.get('shadow_moves', '')}",
             f"Steps Before Shadow Appears: {s.get('steps_before_shadow_appears', '')}",
         ]
@@ -153,16 +153,14 @@ class GspuzzleEnv(BaseEnv):
             image = capture(window, log_path=self.log_path)
         else:
             return None
-        self.logger.info("Image captured.")
-        return image
         # # Resize if needed
-        # buf = io.BytesIO()
-        # image.save(buf, format="png")
-        # image_bytes = buf.tell()
-        # scale = image_bytes / self.image_max_bytes
-        # w, h = image.size
-        # new_size = (int(w / scale), int(h / scale)) if scale > 1 else (w, h)
-        # return image.resize(new_size, Image.Resampling.LANCZOS)
+        buf = io.BytesIO()
+        image.save(buf, format="png")
+        image_bytes = buf.tell()
+        scale = image_bytes / self.image_max_bytes
+        w, h = image.size
+        new_size = (int(w / scale), int(h / scale)) if scale > 1 else (w, h)
+        return image.resize(new_size, Image.Resampling.LANCZOS)
 
     def initial_obs(self) -> GspuzzleObs:
         _ = self.get_activate_window()  # Ensure the game window is active
@@ -176,6 +174,7 @@ class GspuzzleEnv(BaseEnv):
         return obs.to_text()
 
     def text2action(self, text: str) -> GspuzzleAction:
+        self.logger.info(f"Converting text to action: {text}")
         return GspuzzleAction.from_string(text)
 
     def step(self, action: GspuzzleAction) -> tuple[GspuzzleObs, float, bool, bool, dict[str, Any]]:
@@ -223,6 +222,7 @@ class GspuzzleEnv(BaseEnv):
     def get_game_info(self) -> dict:
         self.logger.info("Getting game info...")
         return {
+            "prev_state_str": None,
             "level": self.last_obs.state.get("level", "") if hasattr(self, "last_obs") else "",
             "game_status": self.last_obs.state.get("game_status", "") if hasattr(self, "last_obs") else "",
         }
