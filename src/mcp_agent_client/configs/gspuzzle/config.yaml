@@ -6,10 +6,10 @@ runner:
 env:
   state_path: "C:/Users/HSGamer/Downloads/GSPuzzle-Build/PlayerLog.txt"
   task: Complete the 2 puzzles
-  final_level: Level_2
+  final_level: LV_2
   sleep_time: 3
   input_modality: "text_image"  # "text", "text_image"
-  window_capture_mode: "bitblt"  # "bitblt", "mss", "dxcam"
+  window_capture_mode: "autogui"  # "bitblt", "mss", "dxcam"
   image_max_bytes: 5242880
   io_env:
     env_name: "Gspuzzle"
@@ -17,9 +17,8 @@ env:
 
 # agent configuration
 agent:
-  llm_name: gpt-4o
-  api_key: "token-abc123"
-  api_base_url: "http://YOUR_LOCAL_IP:PORT/v1"
+  llm_name: gemini-2.5-flash
+  embeddings_name: gemini
   temperature: 0.3
   repetition_penalty: 1.0
   agent_type: zeroshot_agent

@@ -70,7 +70,7 @@ class MCPGameServer:
         img_str = base64.b64encode(buffered.getvalue()).decode()
         return img_str
 
-    def load_current_obs(self) -> Tuple[str, dict]:
+    def load_current_obs(self) -> Tuple[str, str, dict]:
         if self.first_loading:
             self.obs = self.env.initial_obs()
             self.first_loading = False

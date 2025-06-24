@@ -136,7 +136,6 @@ class GspuzzleEnv(BaseEnv):
             )
 
     def get_activate_window(self):
-        self.logger.info("Activating game window...")
         windows = self.io_env.get_windows_by_config()
         if not windows:
             raise RuntimeError("Game window not found")
@@ -145,32 +144,27 @@ class GspuzzleEnv(BaseEnv):
         return window
 
     def capture_image(self) -> Optional[Image.Image]:
-        self.logger.info("Capturing image...")
         if not self.use_image:
-            self.logger.info("Image capture is disabled in this configuration.")
             return None
         if _isWin():
-            self.logger.info("Capturing image using WindowCapture...")
             image = self.window_capture.capture(log_path=self.log_path)
         elif _isMac():
-            self.logger.info("Capturing image using macOS capture...")
             window = self.get_activate_window()
             image = capture(window, log_path=self.log_path)
         else:
-            self.logger.info("Unsupported OS for image capture.")
             return None
         self.logger.info("Image captured.")
-        # Resize if needed
-        buf = io.BytesIO()
-        image.save(buf, format="png")
-        image_bytes = buf.tell()
-        scale = image_bytes / self.image_max_bytes
-        w, h = image.size
-        new_size = (int(w / scale), int(h / scale)) if scale > 1 else (w, h)
-        return image.resize(new_size, Image.Resampling.LANCZOS)
+        return image
+        # # Resize if needed
+        # buf = io.BytesIO()
+        # image.save(buf, format="png")
+        # image_bytes = buf.tell()
+        # scale = image_bytes / self.image_max_bytes
+        # w, h = image.size
+        # new_size = (int(w / scale), int(h / scale)) if scale > 1 else (w, h)
+        # return image.resize(new_size, Image.Resampling.LANCZOS)
 
     def initial_obs(self) -> GspuzzleObs:
-        self.logger.info("Getting initial observation...")
         _ = self.get_activate_window()  # Ensure the game window is active
         state = self.state_parser.get_state()
         image = self.capture_image()
@@ -179,15 +173,12 @@ class GspuzzleEnv(BaseEnv):
         return obs
 
     def obs2text(self, obs: GspuzzleObs) -> str:
-        self.logger.info("Converting observation to text...")
         return obs.to_text()
 
     def text2action(self, text: str) -> GspuzzleAction:
-        self.logger.info("Converting text to action...")
         return GspuzzleAction.from_string(text)
 
     def step(self, action: GspuzzleAction) -> tuple[GspuzzleObs, float, bool, bool, dict[str, Any]]:
-        self.logger.info(f"Performing action: {action.type}")
         _ = self.get_activate_window()  # Ensure the game window is active
         info = {}
 
@@ -227,7 +218,6 @@ class GspuzzleEnv(BaseEnv):
         return obs, score, terminated, False, info
 
     def evaluate(self, obs: GspuzzleObs) -> tuple[int, bool]:
-        self.logger.info("Evaluating observation...")
         return obs.score, obs.done
 
     def get_game_info(self) -> dict:
