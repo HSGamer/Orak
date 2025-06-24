@@ -5,7 +5,6 @@ runner:
   max_steps: 400
 env:
   state_path: "C:/Users/HSGamer/Downloads/GSPuzzle-Build/PlayerLog.txt"
-  result_path: "C:/Users/HSGamer/Downloads/GSPuzzle-Build/PlayData"
   task: Complete the 2 puzzles
   final_level: Level_2
   sleep_time: 3

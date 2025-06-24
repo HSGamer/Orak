@@ -375,7 +375,7 @@ class MCPAgentServer:
 
         @self.mcp.tool(name="get-agent-module-prompts", description="Get an agent module named module_type and return its system and user prompts to response.")
         def get_agent_module_prompts(module_type: str, game_info: dict) -> str:
-            #logger.info(f"[DEBUG] get_agent_module_prompts(), module_type: {self.module_type}")
+            logger.info(f"[DEBUG] get_agent_module_prompts(), module_type: {self.module_type}")
 
             self.module_type = module_type
             self.local_memory = agent_get_local_memory(self, game_info)

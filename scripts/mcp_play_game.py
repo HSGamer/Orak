@@ -1,3 +1,8 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
+
 import asyncio
 import argparse
 import logging
@@ -137,3 +142,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
